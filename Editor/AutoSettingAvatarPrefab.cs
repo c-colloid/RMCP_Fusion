@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
-using Photon.Pun;
 using System.IO;
+using Fusion;
 
 public class AutoSettingAvatarPrefab : Editor
 {
@@ -16,7 +16,7 @@ public class AutoSettingAvatarPrefab : Editor
             return;
         }
 
-        // Checking whether photon resource folder was existed
+        // Photonフォルダの存在をチェック
         string photonFolderPath = "Assets/Photon/PhotonUnityNetworking/Resources";
         if (!Directory.Exists(photonFolderPath))
         {
@@ -24,10 +24,10 @@ public class AutoSettingAvatarPrefab : Editor
             return;
         }
 
-        // Attaching scripts
+        // 任意のスクリプトをプログラム上で指定
         AttachScripts(selectedObject);
 
-        // Save an avatar as a prefab file
+        // Prefab化して保存
         SaveAsPrefab(selectedObject, photonFolderPath);
 
         Debug.Log("Scripts have been attached and the GameObject has been saved as a Prefab.");
@@ -35,7 +35,7 @@ public class AutoSettingAvatarPrefab : Editor
 
     private static void AttachScripts(GameObject obj)
     {
-        // Add scripts here
+        // アタッチしたいスクリプトをここに追加
         if (!obj.GetComponent<RMCprotocol>())
         {
             obj.AddComponent<RMCprotocol>();
@@ -45,20 +45,20 @@ public class AutoSettingAvatarPrefab : Editor
         {
             obj.AddComponent<ControllerScript>();
         }
-        if (!obj.GetComponent<PhotonView>())
+        if (!obj.GetComponent<NetworkObject>())
         {
-            obj.AddComponent<PhotonView>();
+            obj.AddComponent<NetworkObject>();
         }
 
-        // It is possible to add the scripts if necessary
+        // 必要に応じてさらにスクリプトを追加
     }
 
     private static void SaveAsPrefab(GameObject obj, string folderPath)
     {
-        // Create the path
+        // フォルダパスを元にPrefabのパスを作成
         string prefabPath = Path.Combine(folderPath, obj.name + ".prefab");
 
-        // Create and update prefab file
+        // Prefabを作成または更新
         PrefabUtility.SaveAsPrefabAsset(obj, prefabPath);
         AssetDatabase.SaveAssets();
     }
