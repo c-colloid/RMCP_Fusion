@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using Photon.Pun;
 
 namespace RPC
 {
@@ -152,30 +151,30 @@ namespace RPC
                 }
             }
 
-            public static void UpdateAnimator(PhotonView photonView, Animator sourceAnimator, Transform root, ref float timer, float timePerFrame, string rpcMethodName)
-            {
-                if (photonView.IsMine)
-                {
-                    timer += Time.deltaTime;
-                    if (timer >= timePerFrame)
-                    {
-                        timer -= timePerFrame;
-                        if (sourceAnimator != null)
-                        {
-                            byte[] boneRotations = GetBoneRotationsAsByteArray(sourceAnimator);
-                            byte[] rootPosition = Vector3ToByteArray(root.position);
-                            byte[] rootRotation = QuaternionToByteArray(root.rotation);
-
-                            byte[] combinedData = new byte[boneRotations.Length + rootPosition.Length + rootRotation.Length];
-                            Buffer.BlockCopy(boneRotations, 0, combinedData, 0, boneRotations.Length);
-                            Buffer.BlockCopy(rootPosition, 0, combinedData, boneRotations.Length, rootPosition.Length);
-                            Buffer.BlockCopy(rootRotation, 0, combinedData, boneRotations.Length + rootPosition.Length, rootRotation.Length);
-
-                            photonView.RPC(rpcMethodName, RpcTarget.All, combinedData);
-                        }
-                    }
-                }
-            }
+            // public static void UpdateAnimator(PhotonView photonView, Animator sourceAnimator, Transform root, ref float timer, float timePerFrame, string rpcMethodName)
+            // {
+            //     if (photonView.IsMine)
+            //     {
+            //         timer += Time.deltaTime;
+            //         if (timer >= timePerFrame)
+            //         {
+            //             timer -= timePerFrame;
+            //             if (sourceAnimator != null)
+            //             {
+            //                 byte[] boneRotations = GetBoneRotationsAsByteArray(sourceAnimator);
+            //                 byte[] rootPosition = Vector3ToByteArray(root.position);
+            //                 byte[] rootRotation = QuaternionToByteArray(root.rotation);
+            //
+            //                 byte[] combinedData = new byte[boneRotations.Length + rootPosition.Length + rootRotation.Length];
+            //                 Buffer.BlockCopy(boneRotations, 0, combinedData, 0, boneRotations.Length);
+            //                 Buffer.BlockCopy(rootPosition, 0, combinedData, boneRotations.Length, rootPosition.Length);
+            //                 Buffer.BlockCopy(rootRotation, 0, combinedData, boneRotations.Length + rootPosition.Length, rootRotation.Length);
+            //
+            //                 photonView.RPC(rpcMethodName, RpcTarget.All, combinedData);
+            //             }
+            //         }
+            //     }
+            // }
 
             public static void SetAnimatorStateFromByteArray(Animator animator, Transform root, byte[] data)
             {
