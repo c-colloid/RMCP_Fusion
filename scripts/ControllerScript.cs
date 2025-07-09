@@ -4,13 +4,13 @@ using UnityEngine;
 public class ControllerScript : NetworkBehaviour
 {
     [Header("Motion Capture Scripts Control")]
-    // ‘ÎÛ‚ÌƒXƒNƒŠƒvƒg‚ğ•Û‚·‚éƒŠƒXƒg
+    // å¯¾è±¡ã®ã‚¹ã‚¯ãƒªãƒ—ãƒˆã‚’ä¿æŒã™ã‚‹ãƒªã‚¹ãƒˆ
     public MonoBehaviour[] motionCaptureScripts;
 
-    // ƒXƒ^[ƒg‚ÉŒÄ‚Ño‚³‚ê‚éƒƒ\ƒbƒh
+    // æ¥ç¶šæ™‚ã«å‘¼ã³å‡ºã•ã‚Œã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
     public override void Spawned()
     {
-        // ‚±‚ÌObject‚ª©•ª‚Ì‚à‚Ì‚Å‚È‚¢ê‡
+        // ã“ã®ObjectãŒè‡ªåˆ†ã®ã‚‚ã®ã§ãªã„å ´åˆ
         if (!Object.HasStateAuthority)
         {
             DisableMotionCaptureScripts();
