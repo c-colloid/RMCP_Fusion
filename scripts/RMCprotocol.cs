@@ -104,8 +104,8 @@ public class RMCprotocol : NetworkBehaviour, INetworkRunnerCallbacks
         {
             byte[] motionData = new byte[data.Count];
             Array.Copy(data.Array, data.Offset, motionData, 0, data.Count);
-            receivedMotionData[player] = motionData;
-            
+            receivedMotionData[Object.StateAuthority] = motionData;
+
             Debug.Log($"Received motion data from {player}: {data.Count} bytes");
         }
     }
