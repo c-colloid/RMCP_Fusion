@@ -19,6 +19,14 @@ public class RMCprotocol : NetworkBehaviour, INetworkRunnerCallbacks
     private ReliableKey motionDataKey;
     
     private Dictionary<PlayerRef, byte[]> receivedMotionData = new Dictionary<PlayerRef, byte[]>();
+    
+    public SyncMode SelectedSyncMode { get; set; } = SyncMode.RPC; // Default to RPC mode
+
+    public enum SyncMode
+    {
+        RPC = 0, // Remote Procedure Call
+        Streaming = 1 // Streaming data
+    }
 
     public override void Spawned()
     {
@@ -69,7 +77,16 @@ public class RMCprotocol : NetworkBehaviour, INetworkRunnerCallbacks
             {
                 if (player != Object.StateAuthority)
                 {
-                    Runner.SendReliableDataToPlayer(player, motionDataKey, coombinedData);
+                    if (SelectedSyncMode == SyncMode.RPC)
+                    {
+                        // Send motion data using RPC
+                        RPC_MotionData(coombinedData);
+                    }
+                    else if (SelectedSyncMode == SyncMode.Streaming)
+                    {
+                        // Send motion data using reliable data transfer
+                        Runner.SendReliableDataToPlayer(player, motionDataKey, coombinedData);
+                    }
                 }
             }
         }
@@ -97,6 +114,28 @@ public class RMCprotocol : NetworkBehaviour, INetworkRunnerCallbacks
         }
     }
 
+    [Rpc(RpcSources.InputAuthority, RpcTargets.Proxies, InvokeLocal = false, TickAligned = false)]
+    public void RPC_MotionData(byte[] data, RpcInfo info = default)
+    {
+        if (!Object.HasStateAuthority)
+        {
+            // Store the received motion data for the player
+            if (!receivedMotionData.ContainsKey(info.Source))
+            {
+                receivedMotionData[info.Source] = data;
+            }
+            else
+            {
+                receivedMotionData[info.Source] = data; // Update existing data
+            }
+
+            Debug.Log($"Received motion data from {info.Source}: {data.Length} bytes");
+        }
+        else
+        {
+            Debug.LogWarning("ReceiveMotionData called on authoritative object.");
+        }
+    }
 
     public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data)
     {
