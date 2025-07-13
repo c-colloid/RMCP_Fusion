@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
 
-public class PlayerSpawner : SimulationBehaviour, IPlayerJoined
+public class PlayerSpawner : NetworkBehaviour, IPlayerJoined
 {
     [Header("Avatar Configuration")]
     [SerializeField] private NetworkPrefabRef PlayerPrefab;
