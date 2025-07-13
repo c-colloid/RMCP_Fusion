@@ -30,11 +30,11 @@ public class RMCprotocol : NetworkBehaviour, INetworkRunnerCallbacks
 
         timePerFrame = 1f / framesPerSecond;
         timer = 0f;
-        
+
         motionDataKey = ReliableKey.FromInts((int)Object.Id.Raw, 1, 0, 0);
-       
+
         Runner.AddCallbacks(this);
-        
+
         Debug.Log($"Spawned for player {Object.StateAuthority}, key: {motionDataKey}");
     }
 
@@ -63,14 +63,7 @@ public class RMCprotocol : NetworkBehaviour, INetworkRunnerCallbacks
     {
         try
         {
-            byte[] boneRotations = calc_funcs.GetBoneRotationsAsByteArray(sourceAnimator);
-            byte[] rootPositions = calc_funcs.Vector3ToByteArray(rootTransform.position);
-            byte[] rootRotations = calc_funcs.QuaternionToByteArray(rootTransform.rotation);
-            
-            byte[] coombinedData = new byte[boneRotations.Length + rootPositions.Length];
-            Buffer.BlockCopy(boneRotations, 0, coombinedData, 0, boneRotations.Length);
-            Buffer.BlockCopy(rootPositions, 0, coombinedData, boneRotations.Length, rootPositions.Length);
-            Buffer.BlockCopy(rootRotations, 0, coombinedData, rootRotations.Length, rootPositions.Length);
+            var coombinedData = calc_funcs.GetByteArrayFromAnimatorState(sourceAnimator, rootTransform);
 
             foreach (var player in Runner.ActivePlayers)
             {
