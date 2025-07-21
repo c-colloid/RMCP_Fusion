@@ -35,7 +35,8 @@ Import Options:
 
 3. Copy the generated App ID from the dashboard
 1. Insert the App ID in the Fusion Hub Welcome tab that appeared in Unity
-1. **Important:** Configure your project for Shared Mode topology, as this system uses cloud rooms with shared state authority rather than client-host architecture
+> [!IMPORTANT]
+> Configure your project for **Shared Mode** topology, as this system uses cloud rooms with shared state authority rather than client-host architecture
 
 ### 3. Import unity package on Unity
 You can import the unitypackage file from Assets>Import package>Custom package.
